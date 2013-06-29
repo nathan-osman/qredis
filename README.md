@@ -2,6 +2,15 @@
 
 QRedis provides a modern Qt client library for communicating with a [Redis server](http://redis.io/). The code uses many new constructs introduced in [C++11](https://en.wikipedia.org/wiki/C%2B%2B11) and compiles exclusively with Qt 5, ensuring years of compatibility down the road.
 
+### Requirements
+
+To compile QRedis, the following requirements must be met:
+
+* GCC 4.6+ or Microsoft Visual C++ 2010+
+* Qt 5+
+
+*It is not necessary to have Redis installed in order to build the client library. However, you will be unable to run the test suite.*
+
 ### Building QRedis
 
 QRedis uses [CMake](http://www.cmake.org/) for building the client library, which simplifies the necessary steps across all supported platforms. Assuming you have Qt 5 installed in a location that CMake can find, the client library can be built with the following steps:
