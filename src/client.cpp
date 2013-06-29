@@ -3,8 +3,8 @@
 
 using namespace QRedis;
 
-Client::Client()
-    : d(new ClientPrivate)
+Client::Client(QObject * parent)
+    : QObject(parent), d(new ClientPrivate)
 {
     connect(&d->socket, &QTcpSocket::connected,    this, &Client::connected);
     connect(&d->socket, &QTcpSocket::disconnected, this, &Client::disconnected);

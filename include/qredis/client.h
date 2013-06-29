@@ -23,8 +23,9 @@ namespace QRedis
             
             /**
              * @brief Connects to a Redis server
+             * @param parent the parent QObject
              */
-            Client();
+            explicit Client(QObject * parent = nullptr);
 
             /**
              * @brief Disconnects from the Redis server
