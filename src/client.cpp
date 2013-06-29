@@ -6,8 +6,8 @@ using namespace QRedis;
 Client::Client()
     : d(new ClientPrivate)
 {
-    connect(d->socket, &QTcpSocket::connected,    this, &Client::connected);
-    connect(d->socket, &QTcpSocket::disconnected, this, &Client::disconnected);
+    connect(&d->socket, &QTcpSocket::connected,    this, &Client::connected);
+    connect(&d->socket, &QTcpSocket::disconnected, this, &Client::disconnected);
 }
 
 Client::~Client()

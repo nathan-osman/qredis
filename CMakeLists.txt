@@ -9,11 +9,19 @@ set(QREDIS_MINOR 1)
 set(QREDIS_PATCH 0)
 set(QREDIS_VERSION "${QREDIS_MAJOR}.${QREDIS_MINOR}.${QREDIS_PATCH}")
 
+# C++11 support must be enabled in GCC.
+if(CMAKE_COMPILER_IS_GNUCXX)
+    # Ensure that we are using at least GCC 4.6+.
+    if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 4.6)
+        message(FATAL_ERROR "GCC 4.6+ is required (" ${CMAKE_CXX_COMPILER_VERSION} " detected).")
+    endif()
+    # Enable C++11 features.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+endif()
+
 # The QtCore and QtNetwork libraries are both required.
 find_package(Qt5Core    REQUIRED)
 find_package(Qt5Network REQUIRED)
-
-# TODO: enable C++11 compiler support
 
 # Specify where QRedis includes are located.
 include_directories(include)
