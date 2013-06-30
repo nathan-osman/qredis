@@ -36,4 +36,15 @@ QRedis uses [CMake](http://www.cmake.org/) for building the client library, whic
 
 ### Usage
 
-[TODO]
+In order to send commands to a Redis server, you need to create an instance of the `Client` class and connect to the server. For example, if Redis is running on the same server as your application, your code might look something like this:
+
+    #include <qredis/client.h>
+    
+    QRedis::Client client;
+    client.connectToHost(QHostAddress::LocalHost);
+
+Once the connection is complete, the client will emit the `connected()` signal. You can then begin executing commands. For example, to send the `PING` command:
+
+    QRedis::Command * command = client.sendCommand("PING");
+
+The `sendCommand()` method returns a `Command *`, which provides signals to indicate when the command has completed or when an error occurs.

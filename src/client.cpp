@@ -24,7 +24,7 @@ void Client::disconnectFromHost()
     d->socket.disconnectFromHost();
 }
 
-Command * Client::sendCommand()
+Command * Client::sendCommand(const QString & command)
 {
-    return nullptr;
+    return new Command(this);
 }

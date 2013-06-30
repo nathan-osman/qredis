@@ -22,13 +22,13 @@ namespace QRedis
         public:
             
             /**
-             * @brief Connects to a Redis server
+             * @brief Creates a Redis client
              * @param parent the parent QObject
              */
             explicit Client(QObject * parent = nullptr);
 
             /**
-             * @brief Disconnects from the Redis server
+             * @brief Destroys the client
              */
             virtual ~Client();
 
@@ -49,9 +49,10 @@ namespace QRedis
 
             /**
              * @brief Sends the specified command to the Redis server.
+             * @param command the command to execute
              * @return an object that may be used for obtaining the response
              */
-            Command * sendCommand();
+            Command * sendCommand(const QString & command);
 
         signals:
 

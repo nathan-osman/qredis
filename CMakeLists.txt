@@ -28,7 +28,8 @@ include_directories(include)
 
 # QRedis source files.
 set(QREDIS_SRC
-    src/client.cpp)
+    src/client.cpp
+    src/command.cpp)
 
 # QRedis header files requiring MOC.
 qt5_wrap_cpp(QREDIS_MOC
