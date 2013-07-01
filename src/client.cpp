@@ -70,7 +70,7 @@ void ClientPrivate::readReply()
 }
 
 Client::Client(QObject * parent)
-    : QObject(parent), d(new ClientPrivate)
+    : QObject(parent), d(new ClientPrivate(this))
 {
 }
 

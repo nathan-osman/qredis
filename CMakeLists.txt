@@ -3,6 +3,9 @@ cmake_minimum_required(VERSION 2.8.9)
 
 project(qredis)
 
+# These options can be used to control the build process.
+option(BUILD_TESTS "Build the QRedis test suite" ON)
+
 # These definitions are used to set the target properties later on.
 set(QREDIS_MAJOR 0)
 set(QREDIS_MINOR 1)
@@ -48,7 +51,7 @@ set_target_properties(qredis PROPERTIES
     SOVERSION ${QREDIS_MAJOR})
 
 # This causes the appropriate libraries to be included in the link process.
-qt5_use_modules(qredis Network)
+qt5_use_modules(qredis Core Network)
 
 # Specify the proper installation paths.
 install(TARGETS qredis
@@ -56,3 +59,9 @@ install(TARGETS qredis
     ARCHIVE       DESTINATION lib
     RUNTIME       DESTINATION bin
     PUBLIC_HEADER DESTINATION include/qredis)
+
+# If the tests are to be built, then add them to the project.
+if(BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
