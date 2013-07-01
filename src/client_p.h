@@ -1,7 +1,10 @@
 #ifndef QREDIS_CLIENT_P_H
 #define QREDIS_CLIENT_P_H
 
+#include <QQueue>
 #include <QTcpSocket>
+
+#include <qredis/request.h>
 
 namespace QRedis
 {
@@ -10,6 +13,7 @@ namespace QRedis
         public:
 
             QTcpSocket socket;
+            QQueue<Request *> queue;
     };
 }
 

@@ -24,7 +24,8 @@ void Client::disconnectFromHost()
     d->socket.disconnectFromHost();
 }
 
-Command * Client::sendCommand(const QString & command)
+Request * Client::sendCommand(const QString & command)
 {
-    return new Command(this);
+    Request * request = new Request(this);
+    d->queue.enqueue(request);
 }

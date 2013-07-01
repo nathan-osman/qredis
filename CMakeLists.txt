@@ -29,11 +29,12 @@ include_directories(include)
 # QRedis source files.
 set(QREDIS_SRC
     src/client.cpp
-    src/command.cpp)
+    src/request.cpp)
 
 # QRedis header files requiring MOC.
 qt5_wrap_cpp(QREDIS_MOC
-    include/qredis/client.h)
+    include/qredis/client.h
+    include/qredis/request.h)
 
 # Create the client library.
 add_library(qredis SHARED

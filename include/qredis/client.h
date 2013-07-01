@@ -5,7 +5,7 @@
 #include <QObject>
 #include <QScopedPointer>
 
-#include <qredis/command.h>
+#include <qredis/request.h>
 #include "qredis_export.h"
 
 namespace QRedis
@@ -48,11 +48,11 @@ namespace QRedis
             void disconnectFromHost();
 
             /**
-             * @brief Sends the specified command to the Redis server.
+             * @brief Sends the specified command to the Redis server
              * @param command the command to execute
-             * @return an object that may be used for obtaining the response
+             * @return an object representing the request
              */
-            Command * sendCommand(const QString & command);
+            Request * sendCommand(const QString & command);
 
         signals:
 
