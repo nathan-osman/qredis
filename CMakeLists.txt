@@ -34,7 +34,8 @@ set(QREDIS_SRC
 # QRedis header files requiring MOC.
 qt5_wrap_cpp(QREDIS_MOC
     include/qredis/client.h
-    include/qredis/request.h)
+    include/qredis/request.h
+    src/client_p.h)
 
 # Create the client library.
 add_library(qredis SHARED
