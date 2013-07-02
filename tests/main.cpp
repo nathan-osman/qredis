@@ -1,6 +1,13 @@
-#include <iostream>
+#include <QCoreApplication>
+#include <QTest>
 
-int main(int argc, char ** argv)
+#include "testclient.h"
+
+int main(int argc, char * argv[])
 {
-    return 0;
+    QCoreApplication app(argc, argv);
+    Q_UNUSED(app)
+
+    TestClient test;
+    return QTest::qExec(&test);
 }

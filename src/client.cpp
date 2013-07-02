@@ -78,9 +78,9 @@ Client::~Client()
 {
 }
 
-void Client::connectToHost(const QHostAddress & address, quint16 port)
+void Client::connectToHost(const QString & hostName, quint16 port)
 {
-    d->socket.connectToHost(address, port);
+    d->socket.connectToHost(hostName, port);
 }
 
 void Client::disconnectFromHost()
@@ -95,4 +95,14 @@ Request * Client::sendCommand(const QString & command)
     Request * request = new Request(this);
     d->queue.enqueue(request);
     return request;
+}
+
+bool Client::waitForConnected(int msecs)
+{
+    return d->socket.waitForConnected(msecs);
+}
+
+bool Client::waitForDisconnected(int msecs)
+{
+    return d->socket.waitForDisconnected(msecs);
 }

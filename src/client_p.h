@@ -28,7 +28,7 @@ namespace QRedis
             QQueue<Request *> queue;
             QByteArray buffer;
 
-        public slots:
+        public Q_SLOTS:
 
             void reset();
             void readReply();

@@ -1,7 +1,6 @@
 #ifndef QREDIS_CLIENT_H
 #define QREDIS_CLIENT_H
 
-#include <QHostAddress>
 #include <QObject>
 #include <QScopedPointer>
 
@@ -34,13 +33,13 @@ namespace QRedis
 
             /**
              * @brief Attempts to connect to the specified Redis server
-             * @param address the address of the Redis server
+             * @param hostName the hostname of the Redis server
              * @param port the port that the Redis server is listening on
              *
              * If the connection was successful, the connected() signal will be
              * emitted.
              */
-            void connectToHost(const QHostAddress & address, quint16 port = 6379);
+            void connectToHost(const QString & hostName, quint16 port = 6379);
 
             /**
              * @brief Disconnects from the Redis server
@@ -54,7 +53,23 @@ namespace QRedis
              */
             Request * sendCommand(const QString & command);
 
-        signals:
+            /**
+             * @brief Waits for the socket to finish connecting
+             * @param msecs the amount of time in milliseconds to wait
+             * @return true if the connection was completed
+             *
+             * Note: to wait indefinitely, pass a value of -1.
+             */
+            bool waitForConnected(int msecs = 30000);
+
+            /**
+             * @brief Waits for the socket to finish disconnecting
+             * @param msecs the amount of time in milliseconds to wait
+             * @return true if the disconnection was completed
+             */
+            bool waitForDisconnected(int msecs = 30000);
+
+        Q_SIGNALS:
 
             /**
              * @brief Emitted when the client establishes a connection with the Redis server

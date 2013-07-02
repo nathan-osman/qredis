@@ -32,7 +32,7 @@ namespace QRedis
              */
             virtual ~Request();
 
-        signals:
+        Q_SIGNALS:
 
             /**
              * @brief Emitted when a bulk reply is received
