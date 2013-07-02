@@ -47,6 +47,12 @@ namespace QRedis
             void disconnectFromHost();
 
             /**
+             * @brief Indicates whether the client is connected to a Redis server
+             * @return true if the client is connected
+             */
+            bool isConnected() const;
+
+            /**
              * @brief Sends the specified command to the Redis server
              * @param command the command to execute
              * @return an object representing the request

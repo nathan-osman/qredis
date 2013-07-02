@@ -88,6 +88,11 @@ void Client::disconnectFromHost()
     d->socket.disconnectFromHost();
 }
 
+bool Client::isConnected() const
+{
+    return d->socket.state() == QAbstractSocket::ConnectedState;
+}
+
 Request * Client::sendCommand(const QString & command)
 {
     d->socket.write(QString("%1\r\n").arg(command).toUtf8());

@@ -11,5 +11,7 @@ void TestClient::initTestCase()
 void TestClient::cleanupTestCase()
 {
     client.disconnectFromHost();
-    QVERIFY(client.waitForDisconnected());
+
+    if(client.isConnected())
+        QVERIFY(client.waitForDisconnected());
 }
