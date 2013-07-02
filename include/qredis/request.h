@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QScopedPointer>
 #include <QVariant>
-#include <QVariantList>
 
 #include "qredis_export.h"
 
@@ -13,7 +12,7 @@ namespace QRedis
     class QREDIS_EXPORT RequestPrivate;
 
     /**
-     * @brief Represents a request and its response
+     * @brief Represents a request and its reply
      */
     class QREDIS_EXPORT Request : public QObject
     {
@@ -22,47 +21,42 @@ namespace QRedis
         public:
 
             /**
+             * @brief Types of replies received from the Redis server
+             */
+            enum ReplyType {
+                Status,
+                Error,
+                Integer,
+                Bulk,
+                MultiBulk
+            };
+
+            /**
              * @brief Creates a request
              * @param parent
              */
-            explicit Request(QObject * parent = nullptr);
+            explicit Request(QObject * parent = 0);
 
             /**
              * @brief Destroys the request
              */
             virtual ~Request();
 
+            /**
+             * @brief Waits for the reply to be received
+             * @param msecs the amount of time in milliseconds to wait
+             * @return true if the reply was received
+             */
+            bool waitForReply(int msecs = 30000);
+
         Q_SIGNALS:
 
             /**
-             * @brief Emitted when a bulk reply is received
-             * @param value the bulk value
+             * @brief Emitted when a reply is received
+             * @param type the type of value received
+             * @param value the value received
              */
-            void bulk(const QVariant & value);
-
-            /**
-             * @brief Emitted when an error reply is received
-             * @param message a descriptive error message
-             */
-            void error(const QString & message);
-
-            /**
-             * @brief Emitted when an integer reply is received
-             * @param value the integer value
-             */
-            void integer(qint64 value);
-
-            /**
-             * @brief Emitted when a multi-bulk reply is received
-             * @param value the multi-bulk value
-             */
-            void multiBulk(const QVariantList & value);
-
-            /**
-             * @brief Emitted when a status reply is received
-             * @param message a descriptive status message
-             */
-            void status(const QString & message);
+            void reply(ReplyType type, const QVariant & value);
 
         private:
 

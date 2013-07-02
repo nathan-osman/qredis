@@ -1,5 +1,7 @@
+#include <QSignalSpy>
 #include <QTest>
 
+#include <qredis/request.h>
 #include "testclient.h"
 
 void TestClient::initTestCase()
@@ -14,4 +16,10 @@ void TestClient::cleanupTestCase()
 
     if(client.isConnected())
         QVERIFY(client.waitForDisconnected());
+}
+
+void TestClient::testPing()
+{
+    QRedis::Request * request = client.sendCommand("PING");
+    QVERIFY(request->waitForReply());
 }

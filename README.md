@@ -6,7 +6,7 @@ QRedis provides a modern Qt client library for communicating with a [Redis serve
 
 To compile QRedis, the following requirements must be met:
 
-* GCC 4.6+ or Microsoft Visual C++ 2010+
+* GCC or Microsoft Visual C++
 * Qt 5+
 
 *It is not necessary to have Redis installed in order to build the client library. However, you will be unable to run the test suite.*
@@ -41,7 +41,7 @@ In order to send commands to a Redis server, you need to create an instance of t
     #include <qredis/client.h>
     
     QRedis::Client client;
-    client.connectToHost(QHostAddress::LocalHost);
+    client.connectToHost("localhost");
 
 Once the connection is complete, the client will emit the `connected()` signal. You can then begin executing commands. For example, to send the `PING` command:
 

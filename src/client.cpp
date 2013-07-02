@@ -14,6 +14,14 @@ ClientPrivate::ClientPrivate(Client * client)
 
 bool ClientPrivate::readStatusOrError()
 {
+    /* Check if the reply contains \r\n. */
+    int pos = buffer.indexOf("\r\n");
+    if(pos != -1)
+    {
+        emit queue.dequeue()->reply(Request::Status, buffer.mid(1, pos - 1));
+        buffer.remove(0, pos + 2);
+    }
+
     return false;
 }
 

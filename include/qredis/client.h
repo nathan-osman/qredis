@@ -24,12 +24,18 @@ namespace QRedis
              * @brief Creates a Redis client
              * @param parent the parent QObject
              */
-            explicit Client(QObject * parent = nullptr);
+            explicit Client(QObject * parent = 0);
 
             /**
              * @brief Destroys the client
              */
             virtual ~Client();
+
+            /*
+             * Note: we specifically avoid an overload of connectToHost that
+             * uses QHostAddress since that would force anyone using the client
+             * library to use the QtNetwork module, which we wish to avoid.
+             */
 
             /**
              * @brief Attempts to connect to the specified Redis server

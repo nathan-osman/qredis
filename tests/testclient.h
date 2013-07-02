@@ -9,10 +9,12 @@ class TestClient : public QObject
 {
     Q_OBJECT
 
-    public Q_SLOTS:
+    private Q_SLOTS:
 
         void initTestCase();
         void cleanupTestCase();
+
+        void testPing();
 
     private:
 
