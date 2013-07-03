@@ -1,6 +1,6 @@
 ## QRedis
 
-QRedis provides a modern Qt client library for communicating with a [Redis server](http://redis.io/). The code uses many new constructs introduced in [C++11](https://en.wikipedia.org/wiki/C%2B%2B11) and compiles exclusively with Qt 5, ensuring years of compatibility down the road.
+QRedis provides a modern Qt client library for communicating with a [Redis server](http://redis.io/). The code compiles exclusively with Qt 5, ensuring years of compatibility down the road.
 
 ### Requirements
 
