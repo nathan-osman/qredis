@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QScopedPointer>
-#include <QVariant>
+#include <QVariantList>
 
 #include "qredis_export.h"
 
@@ -19,17 +19,6 @@ namespace QRedis
         Q_OBJECT
 
         public:
-
-            /**
-             * @brief Types of replies received from the Redis server
-             */
-            enum ReplyType {
-                Status,
-                Error,
-                Integer,
-                Bulk,
-                MultiBulk
-            };
 
             /**
              * @brief Creates a request
@@ -52,11 +41,34 @@ namespace QRedis
         Q_SIGNALS:
 
             /**
-             * @brief Emitted when a reply is received
-             * @param type the type of value received
-             * @param value the value received
+             * @brief Emitted when a bulk reply is received
+             * @param value the value as a byte array
              */
-            void reply(ReplyType type, const QVariant & value);
+            void bulk(const QByteArray & value);
+
+            /**
+             * @brief Emitted when an error reply is received
+             * @param message a descriptive error message
+             */
+            void error(const QString & message);
+
+            /**
+             * @brief Emitted when an integer reply is received
+             * @param value the integer value
+             */
+            void integer(qlonglong value);
+
+            /**
+             * @brief Emitted when a multi-bulk reply is received
+             * @param a list of bulk values
+             */
+            void multiBulk(const QVariantList & values);
+
+            /**
+             * @brief Emitted when a status reply is received
+             * @param message a descriptive status message
+             */
+            void status(const QString & message);
 
         private:
 

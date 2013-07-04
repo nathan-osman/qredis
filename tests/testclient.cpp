@@ -6,8 +6,6 @@
 
 void TestClient::initTestCase()
 {
-    qRegisterMetaType<QRedis::Request::ReplyType>("ReplyType");
-
     client.connectToHost("localhost");
     QVERIFY(client.waitForConnected());
 }
@@ -23,9 +21,9 @@ void TestClient::cleanupTestCase()
 void TestClient::testPing()
 {
     QRedis::Request * request = client.sendCommand("PING");
-    QSignalSpy spy(request, SIGNAL(reply(ReplyType,QVariant)));
+    QSignalSpy spy(request, SIGNAL(status(QString)));
 
     QVERIFY(request->waitForReply());
     QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy[0][1].toString(), QString("PONG"));
+    QCOMPARE(spy[0][0].toString(), QString("PONG"));
 }

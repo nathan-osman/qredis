@@ -25,8 +25,12 @@ bool Request::waitForReply(int msecs)
     timer.setInterval(msecs);
     timer.setSingleShot(true);
 
-    connect(&timer, SIGNAL(timeout()),                 &d->loop, SLOT(quit()));
-    connect(this,   SIGNAL(reply(ReplyType,QVariant)), d.data(), SLOT(quitEventLoop()));
+    connect(&timer, SIGNAL(timeout()),               &d->loop, SLOT(quit()));
+    connect(this,   SIGNAL(bulk(QByteArray)),        d.data(), SLOT(quitEventLoop()));
+    connect(this,   SIGNAL(error(QString)),          d.data(), SLOT(quitEventLoop()));
+    connect(this,   SIGNAL(integer(qlonglong)),      d.data(), SLOT(quitEventLoop()));
+    connect(this,   SIGNAL(multiBulk(QVariantList)), d.data(), SLOT(quitEventLoop()));
+    connect(this,   SIGNAL(status(QString)),         d.data(), SLOT(quitEventLoop()));
 
     /*
      * If the timer fires, the return value will be 0.
