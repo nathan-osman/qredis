@@ -63,7 +63,15 @@ namespace QRedis
              * @param command the command to execute
              * @return an object representing the request
              */
-            Request * sendCommand(const QString & command);
+            Request * sendCommand(const QByteArray & command);
+
+            /**
+             * @brief Attempts to set the specified key to the specified value
+             * @param name the name of the key
+             * @param value the value of the key
+             * @return the request issued
+             */
+            Request * set(const QByteArray & name, const QByteArray & value);
 
             /**
              * @brief Waits for the socket to finish connecting

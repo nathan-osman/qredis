@@ -12,12 +12,23 @@ ClientPrivate::ClientPrivate(Client * client)
     connect(&socket, &QTcpSocket::readyRead,    this, &ClientPrivate::readReply);
 }
 
+int ClientPrivate::readInteger(qlonglong & value)
+{
+    int pos = buffer.indexOf("\r\n");
+    if(pos != -1)
+    {
+        value = buffer.mid(0, pos).toLongLong();
+        buffer.remove(0, pos + 2);
+    }
+    return pos;
+}
+
 /*
  * Note: error replies actually contain a type and then the error description
  * but we just combine them here for simplicity.
  */
 
-bool ClientPrivate::readStatusOrError()
+bool ClientPrivate::readStatusOrErrorReply()
 {
     /* Check if the reply contains \r\n. */
     int pos = buffer.indexOf("\r\n");
@@ -37,7 +48,7 @@ bool ClientPrivate::readStatusOrError()
     return false;
 }
 
-bool ClientPrivate::readInteger()
+bool ClientPrivate::readIntegerReply()
 {
     /* Check if the reply contains \r\n. */
     int pos = buffer.indexOf("\r\n");
@@ -52,7 +63,7 @@ bool ClientPrivate::readInteger()
     return false;
 }
 
-bool ClientPrivate::readBulk()
+bool ClientPrivate::readBulkReply()
 {
     /* Check if the reply contains \r\n. */
     int pos = buffer.indexOf("\r\n");
@@ -71,7 +82,7 @@ bool ClientPrivate::readBulk()
     return false;
 }
 
-bool ClientPrivate::readMultiBulk()
+bool ClientPrivate::readMultiBulkReply()
 {
     return false;
 }
@@ -95,16 +106,16 @@ void ClientPrivate::readReply()
         {
             case '+':
             case '-':
-                finished = readStatusOrError();
+                finished = readStatusOrErrorReply();
                 break;
             case ':':
-                finished = readInteger();
+                finished = readIntegerReply();
                 break;
             case '$':
-                finished = readBulk();
+                finished = readBulkReply();
                 break;
             case '*':
-                finished = readMultiBulk();
+                finished = readMultiBulkReply();
                 break;
         }
 
@@ -137,9 +148,9 @@ bool Client::isConnected() const
     return d->socket.state() == QAbstractSocket::ConnectedState;
 }
 
-Request * Client::sendCommand(const QString & command)
+Request * Client::sendCommand(const QByteArray & command)
 {
-    d->socket.write(QString("%1\r\n").arg(command).toUtf8());
+    d->socket.write(command + "\r\n");
 
     Request * request = new Request(this);
     d->queue.enqueue(request);

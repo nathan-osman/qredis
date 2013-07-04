@@ -18,10 +18,13 @@ namespace QRedis
 
             ClientPrivate(Client *);
 
-            bool readStatusOrError();
-            bool readInteger();
-            bool readBulk();
-            bool readMultiBulk();
+            /* Utility methods for reading items from the buffer. */
+            int readInteger(qlonglong &);
+
+            bool readStatusOrErrorReply();
+            bool readIntegerReply();
+            bool readBulkReply();
+            bool readMultiBulkReply();
 
             QTcpSocket socket;
 

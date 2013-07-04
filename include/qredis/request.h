@@ -65,6 +65,11 @@ namespace QRedis
             void multiBulk(const QVariantList & values);
 
             /**
+             * @brief Emitted when any reply is received
+             */
+            void reply();
+
+            /**
              * @brief Emitted when a status reply is received
              * @param message a descriptive status message
              */
