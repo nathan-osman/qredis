@@ -54,6 +54,20 @@ bool ClientPrivate::readInteger()
 
 bool ClientPrivate::readBulk()
 {
+    /* Check if the reply contains \r\n. */
+    int pos = buffer.indexOf("\r\n");
+    if(pos != -1)
+    {
+        int length = buffer.mid(1, pos -1).toInt();
+        if(buffer.size() >= pos + length + 4)
+        {
+            emit queue.dequeue()->bulk(buffer.mid(pos + 2, length));
+
+            buffer.remove(0, pos + length + 4);
+            return true;
+        }
+    }
+
     return false;
 }
 

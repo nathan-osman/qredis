@@ -15,6 +15,7 @@ class TestClient : public QObject
         void cleanupTestCase();
 
         void testPing();
+        void testStorage();
 
     private:
 
