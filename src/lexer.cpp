@@ -25,6 +25,9 @@ void Lexer::readData()
             case ReadingUnsafeString: if(!readUnsafeString()) return; break;
             case ReadingSafeString:   if(!readSafeString())   return; break;
         }
+
+        if(state != ReadingSafeString)
+            state = DoingNothing;
     }
 }
 
@@ -41,12 +44,9 @@ bool Lexer::readCharacter()
     {
         case '+':
         case '-':
-        case '*':
-        case ':': state = ReadingUnsafeString; break;
+        case ':':
+        case '*': state = ReadingUnsafeString; break;
         case '$': state = ReadingLength;       break;
-        default:
-            emit warning(tr("Unexpected character '%1' encountered").arg(static_cast<int>(c), 0, 16));
-            return true;
     }
 
     emit character(c);

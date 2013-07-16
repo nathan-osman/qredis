@@ -19,8 +19,6 @@ class Lexer : public QObject
         void unsafeString(const QString &);
         void safeString(const QByteArray &);
 
-        void warning(const QString &);
-
     private Q_SLOTS:
 
         void readData();

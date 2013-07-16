@@ -23,6 +23,7 @@ include_directories(include)
 set(QREDIS_SRC
     src/client.cpp
     src/lexer.cpp
+    src/parser.cpp
     src/request.cpp)
 
 # QRedis header files requiring MOC.
@@ -31,6 +32,7 @@ qt5_wrap_cpp(QREDIS_MOC
     include/qredis/request.h
     src/client_p.h
     src/lexer.h
+    src/parser.h
     src/request_p.h)
 
 # Create the client library.
