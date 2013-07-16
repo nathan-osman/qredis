@@ -33,11 +33,12 @@ void Parser::readUnsafeString(const QString & value)
         tos().count = value.toInt();
     else
     {
+        Task::Action action = tos().action;
         stack.removeLast();
 
-        if(tos().action == Task::ReadStatus)
+        if(action == Task::ReadStatus)
             emit status(value);
-        else if(tos().action == Task::ReadError)
+        else if(action == Task::ReadError)
         {
             int pos = value.indexOf(' ');
             emit error(value.left(pos), value.right(pos + 1));

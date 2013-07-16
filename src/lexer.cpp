@@ -73,6 +73,7 @@ bool Lexer::readUnsafeString()
     else
         emit unsafeString(s);
 
+    crlf = 0;
     return true;
 }
 
