@@ -4,124 +4,41 @@
 using namespace QRedis;
 
 ClientPrivate::ClientPrivate(Client * client)
-    : q(client)
+    : lexer(&socket), parser(&lexer)
 {
-    connect(&socket, &QTcpSocket::connected,    q,    &Client::connected);
-    connect(&socket, &QTcpSocket::disconnected, q,    &Client::disconnected);
-    connect(&socket, &QTcpSocket::disconnected, this, &ClientPrivate::reset);
-    connect(&socket, &QTcpSocket::readyRead,    this, &ClientPrivate::readReply);
+    connect(&socket, SIGNAL(connected()),    client, SIGNAL(connected()));
+    connect(&socket, SIGNAL(disconnected()), client, SIGNAL(disconnected()));
+
+    connect(&parser, SIGNAL(status(QString)),         SLOT(sendStatus(QString)));
+    connect(&parser, SIGNAL(error(QString,QString)),  SLOT(sendError(QString,QString)));
+    connect(&parser, SIGNAL(integer(qlonglong)),      SLOT(sendInteger(qlonglong)));
+    connect(&parser, SIGNAL(bulk(QByteArray)),        SLOT(sendBulk(QByteArray)));
+    connect(&parser, SIGNAL(multiBulk(QVariantList)), SLOT(sendMultiBulk(QVariantList)));
 }
 
-int ClientPrivate::readInteger(qlonglong & value)
+void ClientPrivate::sendStatus(const QString & message)
 {
-    int pos = buffer.indexOf("\r\n");
-    if(pos != -1)
-    {
-        value = buffer.mid(0, pos).toLongLong();
-        buffer.remove(0, pos + 2);
-    }
-    return pos;
+    emit queue.dequeue()->status(message);
 }
 
-/*
- * Note: error replies actually contain a type and then the error description
- * but we just combine them here for simplicity.
- */
-
-bool ClientPrivate::readStatusOrErrorReply()
+void ClientPrivate::sendError(const QString & generic, const QString & specific)
 {
-    /* Check if the reply contains \r\n. */
-    int pos = buffer.indexOf("\r\n");
-    if(pos != -1)
-    {
-        Request * request = queue.dequeue();
-
-        if(buffer[0] == '+')
-            emit request->status(buffer.mid(1, pos - 1));
-        else
-            emit request->error(buffer.mid(1, pos - 1));
-
-        buffer.remove(0, pos + 2);
-        return true;
-    }
-
-    return false;
+    emit queue.dequeue()->error(generic, specific);
 }
 
-bool ClientPrivate::readIntegerReply()
+void ClientPrivate::sendInteger(qlonglong value)
 {
-    /* Check if the reply contains \r\n. */
-    int pos = buffer.indexOf("\r\n");
-    if(pos != -1)
-    {
-        emit queue.dequeue()->integer(buffer.mid(1, pos -1).toLongLong());
-
-        buffer.remove(0, pos + 2);
-        return true;
-    }
-
-    return false;
+    emit queue.dequeue()->integer(value);
 }
 
-bool ClientPrivate::readBulkReply()
+void ClientPrivate::sendBulk(const QByteArray & value)
 {
-    /* Check if the reply contains \r\n. */
-    int pos = buffer.indexOf("\r\n");
-    if(pos != -1)
-    {
-        int length = buffer.mid(1, pos -1).toInt();
-        if(buffer.size() >= pos + length + 4)
-        {
-            emit queue.dequeue()->bulk(buffer.mid(pos + 2, length));
-
-            buffer.remove(0, pos + length + 4);
-            return true;
-        }
-    }
-
-    return false;
+    emit queue.dequeue()->bulk(value);
 }
 
-bool ClientPrivate::readMultiBulkReply()
+void ClientPrivate::sendMultiBulk(const QVariantList & values)
 {
-    return false;
-}
-
-void ClientPrivate::reset()
-{
-    foreach(Request * request, queue)
-        request->deleteLater();
-    queue.clear();
-}
-
-// TODO: unrecognized replies in the switch should be handled.
-
-void ClientPrivate::readReply()
-{
-    buffer.append(socket.readAll());
-    while(!buffer.isEmpty())
-    {
-        bool finished;
-        switch(buffer[0])
-        {
-            case '+':
-            case '-':
-                finished = readStatusOrErrorReply();
-                break;
-            case ':':
-                finished = readIntegerReply();
-                break;
-            case '$':
-                finished = readBulkReply();
-                break;
-            case '*':
-                finished = readMultiBulkReply();
-                break;
-        }
-
-        if(!finished)
-            break;
-    }
+    emit queue.dequeue()->multiBulk(values);
 }
 
 Client::Client(QObject * parent)

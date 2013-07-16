@@ -7,6 +7,8 @@
 
 #include <qredis/client.h>
 #include <qredis/request.h>
+#include "lexer.h"
+#include "parser.h"
 
 namespace QRedis
 {
@@ -18,27 +20,19 @@ namespace QRedis
 
             ClientPrivate(Client *);
 
-            /* Utility methods for reading items from the buffer. */
-            int readInteger(qlonglong &);
-
-            bool readStatusOrErrorReply();
-            bool readIntegerReply();
-            bool readBulkReply();
-            bool readMultiBulkReply();
-
             QTcpSocket socket;
-
             QQueue<Request *> queue;
-            QByteArray buffer;
 
-        public Q_SLOTS:
+            Lexer lexer;
+            Parser parser;
 
-            void reset();
-            void readReply();
+        private Q_SLOTS:
 
-        private:
-
-            Client * const q;
+            void sendStatus(const QString &);
+            void sendError(const QString &, const QString &);
+            void sendInteger(qlonglong);
+            void sendBulk(const QByteArray &);
+            void sendMultiBulk(const QVariantList &);
     };
 }
 

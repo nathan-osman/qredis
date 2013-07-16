@@ -17,7 +17,7 @@ Request::Request(QObject * parent)
      * Each of these signals also causes the generic reply() signal to be emitted.
      */
     connect(this, SIGNAL(bulk(QByteArray)),        SIGNAL(reply()));
-    connect(this, SIGNAL(error(QString)),          SIGNAL(reply()));
+    connect(this, SIGNAL(error(QString,QString)),  SIGNAL(reply()));
     connect(this, SIGNAL(integer(qlonglong)),      SIGNAL(reply()));
     connect(this, SIGNAL(multiBulk(QVariantList)), SIGNAL(reply()));
     connect(this, SIGNAL(status(QString)),         SIGNAL(reply()));

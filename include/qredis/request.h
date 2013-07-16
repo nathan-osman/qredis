@@ -41,22 +41,29 @@ namespace QRedis
         Q_SIGNALS:
 
             /**
-             * @brief Emitted when a bulk reply is received
-             * @param value the value as a byte array
+             * @brief Emitted when a status reply is received
+             * @param message a descriptive status message
              */
-            void bulk(const QByteArray & value);
+            void status(const QString & message);
 
             /**
              * @brief Emitted when an error reply is received
-             * @param message a descriptive error message
+             * @param generic a generic error identifer
+             * @param specific a more specific error message
              */
-            void error(const QString & message);
+            void error(const QString & generic, const QString & specific);
 
             /**
              * @brief Emitted when an integer reply is received
              * @param value the integer value
              */
             void integer(qlonglong value);
+
+            /**
+             * @brief Emitted when a bulk reply is received
+             * @param value the value as a byte array
+             */
+            void bulk(const QByteArray & value);
 
             /**
              * @brief Emitted when a multi-bulk reply is received
@@ -68,12 +75,6 @@ namespace QRedis
              * @brief Emitted when any reply is received
              */
             void reply();
-
-            /**
-             * @brief Emitted when a status reply is received
-             * @param message a descriptive status message
-             */
-            void status(const QString & message);
 
         private:
 
