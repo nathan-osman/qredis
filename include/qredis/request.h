@@ -5,6 +5,7 @@
 #include <QScopedPointer>
 #include <QVariantList>
 
+#include <qredis/reply.h>
 #include "qredis_export.h"
 
 namespace QRedis
@@ -41,40 +42,10 @@ namespace QRedis
         Q_SIGNALS:
 
             /**
-             * @brief Emitted when a status reply is received
-             * @param message a descriptive status message
+             * @brief Emitted when a reply is received
+             * @param reply the reply received
              */
-            void status(const QString & message);
-
-            /**
-             * @brief Emitted when an error reply is received
-             * @param generic a generic error identifer
-             * @param specific a more specific error message
-             */
-            void error(const QString & generic, const QString & specific);
-
-            /**
-             * @brief Emitted when an integer reply is received
-             * @param value the integer value
-             */
-            void integer(qlonglong value);
-
-            /**
-             * @brief Emitted when a bulk reply is received
-             * @param value the value as a byte array
-             */
-            void bulk(const QByteArray & value);
-
-            /**
-             * @brief Emitted when a multi-bulk reply is received
-             * @param a list of bulk values
-             */
-            void multiBulk(const QVariantList & values);
-
-            /**
-             * @brief Emitted when any reply is received
-             */
-            void reply();
+            void reply(Reply & reply);
 
         private:
 

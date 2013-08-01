@@ -8,37 +8,12 @@ ClientPrivate::ClientPrivate(Client * client)
 {
     connect(&socket, SIGNAL(connected()),    client, SIGNAL(connected()));
     connect(&socket, SIGNAL(disconnected()), client, SIGNAL(disconnected()));
-
-    connect(&parser, SIGNAL(status(QString)),         SLOT(sendStatus(QString)));
-    connect(&parser, SIGNAL(error(QString,QString)),  SLOT(sendError(QString,QString)));
-    connect(&parser, SIGNAL(integer(qlonglong)),      SLOT(sendInteger(qlonglong)));
-    connect(&parser, SIGNAL(bulk(QByteArray)),        SLOT(sendBulk(QByteArray)));
-    connect(&parser, SIGNAL(multiBulk(QVariantList)), SLOT(sendMultiBulk(QVariantList)));
+    connect(&parser, SIGNAL(reply(QRedis::Reply&)),  SLOT(sendReply(Reply&)));
 }
 
-void ClientPrivate::sendStatus(const QString & message)
+void ClientPrivate::sendReply(Reply & reply)
 {
-    emit queue.dequeue()->status(message);
-}
-
-void ClientPrivate::sendError(const QString & generic, const QString & specific)
-{
-    emit queue.dequeue()->error(generic, specific);
-}
-
-void ClientPrivate::sendInteger(qlonglong value)
-{
-    emit queue.dequeue()->integer(value);
-}
-
-void ClientPrivate::sendBulk(const QByteArray & value)
-{
-    emit queue.dequeue()->bulk(value);
-}
-
-void ClientPrivate::sendMultiBulk(const QVariantList & values)
-{
-    emit queue.dequeue()->multiBulk(values);
+    emit queue.dequeue()->reply(reply);
 }
 
 Client::Client(QObject * parent)

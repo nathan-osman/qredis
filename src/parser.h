@@ -6,6 +6,7 @@
 #include <QVariant>
 #include <QVariantList>
 
+#include <qredis/reply.h>
 #include "lexer.h"
 
 class Parser : public QObject
@@ -19,11 +20,7 @@ class Parser : public QObject
 
     Q_SIGNALS:
 
-        void status(const QString &);
-        void error(const QString &, const QString &);
-        void integer(qlonglong);
-        void bulk(const QByteArray &);
-        void multiBulk(const QVariantList &);
+        void reply(QRedis::Reply &);
 
     private Q_SLOTS:
 

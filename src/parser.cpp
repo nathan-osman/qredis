@@ -37,14 +37,14 @@ void Parser::readUnsafeString(const QString & value)
         stack.removeLast();
 
         if(action == Task::ReadStatus)
-            emit status(value);
+            ;//emit status(value);
         else if(action == Task::ReadError)
         {
             int pos = value.indexOf(' ');
-            emit error(value.left(pos), value.right(pos + 1));
+            ;//emit error(value.left(pos), value.right(pos + 1));
         }
         else if(!stack.count())
-            emit integer(value.toLongLong());
+            ;//emit integer(value.toLongLong());
         else
         {
             tos().value.toList().append(value);
@@ -58,7 +58,7 @@ void Parser::readSafeString(const QByteArray & value)
     stack.removeLast();
 
     if(!stack.count())
-        emit bulk(value);
+        ;//emit bulk(value);
     else
     {
         tos().value.toList().append(value);
@@ -75,7 +75,7 @@ void Parser::descend()
 
         if(stack.count() == 1)
         {
-            emit multiBulk(tos().value.toList());
+            ;//emit multiBulk(tos().value.toList());
             stack.removeLast();
             break;
         }

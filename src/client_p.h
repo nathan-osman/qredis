@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 
 #include <qredis/client.h>
+#include <qredis/reply.h>
 #include <qredis/request.h>
 #include "lexer.h"
 #include "parser.h"
@@ -28,11 +29,7 @@ namespace QRedis
 
         private Q_SLOTS:
 
-            void sendStatus(const QString &);
-            void sendError(const QString &, const QString &);
-            void sendInteger(qlonglong);
-            void sendBulk(const QByteArray &);
-            void sendMultiBulk(const QVariantList &);
+            void sendReply(Reply &);
     };
 }
 

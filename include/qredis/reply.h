@@ -18,6 +18,7 @@ namespace QRedis
              * @brief Reply types
              */
             enum Type {
+
                 /**
                  * @brief A status reply
                  *
@@ -25,6 +26,7 @@ namespace QRedis
                  * by the server as a QString.
                  */
                 Status,
+
                 /**
                  * @brief An error reply
                  *
@@ -32,6 +34,7 @@ namespace QRedis
                  * the server as a QString.
                  */
                 Error,
+
                 /**
                  * @brief An integer reply
                  *
@@ -39,6 +42,7 @@ namespace QRedis
                  * the server as a qlonglong.
                  */
                 Integer,
+
                 /**
                  * @brief A bulk reply
                  *
@@ -46,6 +50,7 @@ namespace QRedis
                  * the server as a QByteArray.
                  */
                 Bulk,
+
                 /**
                  * @brief A multi-bulk reply
                  *
@@ -73,7 +78,7 @@ namespace QRedis
              * @brief Returns the value of the reply
              * @return the reply value
              */
-            QVariant & value() const { return _value; }
+            const QVariant & value() const { return _value; }
 
         private:
 
