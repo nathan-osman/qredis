@@ -25,8 +25,6 @@ class Parser : public QObject
         void bulk(const QByteArray &);
         void multiBulk(const QVariantList &);
 
-        void warning(const QString &);
-
     private Q_SLOTS:
 
         void readCharacter(char);

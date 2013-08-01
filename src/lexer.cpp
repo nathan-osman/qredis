@@ -22,8 +22,8 @@ void Lexer::readData()
         switch(state)
         {
             case ReadingLength:
-            case ReadingUnsafeString: if(!readUnsafeString()) return; break;
-            case ReadingSafeString:   if(!readSafeString())   return; break;
+            case ReadingUnsafeString: if(!readUnsafeString()) return;
+            case ReadingSafeString:   if(!readSafeString())   return;
         }
 
         if(state != ReadingSafeString)
@@ -86,5 +86,7 @@ bool Lexer::readSafeString()
     buffer.remove(0, length + 2);
 
     emit safeString(d);
+
+    state = DoingNothing;
     return true;
 }

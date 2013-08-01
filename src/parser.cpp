@@ -22,7 +22,7 @@ void Parser::readCharacter(char c)
         case '$': stack.append(Task(Task::ReadBulk));      break;
         case '*': stack.append(Task(Task::ReadMultiBulk)); break;
         default:
-            emit warning(tr("Skipping unexpected character '%1'").arg(static_cast<int>(c), 0, 16));
+            qWarning("Skipping unexpected character '%x'", static_cast<int>(c));
             break;
     }
 }
