@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QScopedPointer>
-#include <QVariantList>
 
 #include <qredis/reply.h>
 #include "qredis_export.h"
@@ -13,7 +12,7 @@ namespace QRedis
     class QREDIS_EXPORT RequestPrivate;
 
     /**
-     * @brief Represents a request and its reply
+     * @brief Represents a Redis command and its response
      */
     class QREDIS_EXPORT Request : public QObject
     {
@@ -22,8 +21,8 @@ namespace QRedis
         public:
 
             /**
-             * @brief Creates a request
-             * @param parent
+             * @brief Initializes the request
+             * @param parent the parent QObject
              */
             explicit Request(QObject * parent = 0);
 

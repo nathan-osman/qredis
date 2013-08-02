@@ -33,5 +33,5 @@ bool Request::waitForReply(int msecs)
      * If the timer fires, the return value will be 0.
      * Otherwise, quitEventLoop() will terminate the loop with 1.
      */
-    return d->loop.exec();
+    return d->loop.exec(QEventLoop::ExcludeUserInputEvents);
 }
