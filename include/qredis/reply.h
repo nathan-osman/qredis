@@ -66,7 +66,7 @@ namespace QRedis
              * @param type the type of the reply
              * @param value the value of the reply
              */
-            Reply(Type type, QVariant & value) : _type(type), _value(value) {}
+            Reply(Type type) : _type(type) {}
 
             /**
              * @brief Returns the type of the reply
@@ -78,7 +78,7 @@ namespace QRedis
              * @brief Returns the value of the reply
              * @return the reply value
              */
-            const QVariant & value() const { return _value; }
+            QVariant & value() { return _value; }
 
         private:
 
