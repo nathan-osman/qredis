@@ -1,47 +1,50 @@
-#ifndef LEXER_H
-#define LEXER_H
+#ifndef QREDIS_LEXER_H
+#define QREDIS_LEXER_H
 
 #include <QIODevice>
 #include <QObject>
 
-class Lexer : public QObject
+namespace QRedis
 {
-    Q_OBJECT
+    class Lexer : public QObject
+    {
+        Q_OBJECT
 
-    public:
+        public:
 
-        Lexer(QIODevice *, QObject * = 0);
-        virtual ~Lexer();
+            Lexer(QIODevice *, QObject * = 0);
+            virtual ~Lexer();
 
-    Q_SIGNALS:
+        Q_SIGNALS:
 
-        void character(char);
-        void unsafeString(const QString &);
-        void safeString(const QByteArray &);
+            void character(char);
+            void unsafeString(const QString &);
+            void safeString(const QByteArray &);
 
-    private Q_SLOTS:
+        private Q_SLOTS:
 
-        void readData();
+            void readData();
 
-    private:
+        private:
 
-        bool readCharacter();
-        bool readLength();
-        bool readUnsafeString();
-        bool readSafeString();
+            bool readCharacter();
+            bool readLength();
+            bool readUnsafeString();
+            bool readSafeString();
 
-        QIODevice * device;
-        QByteArray buffer;
+            QIODevice * device;
+            QByteArray buffer;
 
-        enum {
-            DoingNothing,
-            ReadingLength,
-            ReadingUnsafeString,
-            ReadingSafeString
-        } state;
+            enum {
+                DoingNothing,
+                ReadingLength,
+                ReadingUnsafeString,
+                ReadingSafeString
+            } state;
 
-        int crlf;
-        int length;
-};
+            int crlf;
+            int length;
+    };
+}
 
-#endif // LEXER_H
+#endif // QREDIS_LEXER_H

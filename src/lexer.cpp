@@ -1,5 +1,7 @@
 #include "lexer.h"
 
+using namespace QRedis;
+
 Lexer::Lexer(QIODevice * device, QObject * parent)
     : QObject(parent), device(device), state(DoingNothing), crlf(0)
 {
