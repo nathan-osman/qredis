@@ -1,5 +1,7 @@
 #include "parser.h"
 
+using namespace QRedis;
+
 Parser::Parser(Lexer * lexer, QObject * parent)
     : QObject(parent)
 {
@@ -16,11 +18,11 @@ void Parser::readCharacter(char c)
 {
     switch(c)
     {
-        case '+': stack.append(Task(Task::ReadStatus));    break;
-        case '-': stack.append(Task(Task::ReadError));     break;
-        case ':': stack.append(Task(Task::ReadInteger));   break;
-        case '$': stack.append(Task(Task::ReadBulk));      break;
-        case '*': stack.append(Task(Task::ReadMultiBulk)); break;
+        case '+': stack.append(Task(Reply::Status));    break;
+        case '-': stack.append(Task(Reply::Error));     break;
+        case ':': stack.append(Task(Reply::Integer));   break;
+        case '$': stack.append(Task(Reply::Bulk));      break;
+        case '*': stack.append(Task(Reply::MultiBulk)); break;
         default:
             qWarning("Skipping unexpected character '%x'", static_cast<int>(c));
             break;
@@ -29,58 +31,35 @@ void Parser::readCharacter(char c)
 
 void Parser::readUnsafeString(const QString & value)
 {
-    if(tos().action == Task::ReadMultiBulk)
+    if(tos().reply.type() == Reply::MultiBulk)
         tos().count = value.toInt();
     else
-    {
-        Task::Action action = tos().action;
-        stack.removeLast();
+        tos().reply.value() = value;
 
-        if(action == Task::ReadStatus)
-            ;//emit status(value);
-        else if(action == Task::ReadError)
-        {
-            int pos = value.indexOf(' ');
-            ;//emit error(value.left(pos), value.right(pos + 1));
-        }
-        else if(!stack.count())
-            ;//emit integer(value.toLongLong());
-        else
-        {
-            tos().value.toList().append(value);
-            descend();
-        }
-    }
+    descend();
 }
 
 void Parser::readSafeString(const QByteArray & value)
 {
-    stack.removeLast();
-
-    if(!stack.count())
-        ;//emit bulk(value);
-    else
-    {
-        tos().value.toList().append(value);
-        descend();
-    }
+    tos().reply.value() = value;
+    descend();
 }
 
 void Parser::descend()
 {
     while(true)
     {
-        if(tos().value.toList().count() < tos().count)
-            break;
+        if(tos().reply.type() == Reply::MultiBulk &&
+           tos().reply.value().toList().count() < tos().count)
+            return;
 
         if(stack.count() == 1)
         {
-            ;//emit multiBulk(tos().value.toList());
-            stack.removeLast();
-            break;
+            emit reply(stack.takeLast().reply);
+            return;
         }
 
-        Task task = stack.takeLast();
-        tos().value.toList().append(task.value);
+        Reply r = stack.takeLast().reply;
+        tos().reply.value().toList().append(QVariant::fromValue(r));
     }
 }

@@ -1,61 +1,55 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef QREDIS_PARSER_H
+#define QREDIS_PARSER_H
 
 #include <QList>
 #include <QObject>
+#include <QPair>
 #include <QVariant>
-#include <QVariantList>
 
 #include <qredis/reply.h>
 #include "lexer.h"
 
-class Parser : public QObject
+namespace QRedis
 {
-    Q_OBJECT
+    class Parser : public QObject
+    {
+        Q_OBJECT
 
-    public:
+        public:
 
-        Parser(Lexer *, QObject * = 0);
-        virtual ~Parser();
+            Parser(Lexer *, QObject * = 0);
+            virtual ~Parser();
 
-    Q_SIGNALS:
+        Q_SIGNALS:
 
-        void reply(QRedis::Reply &);
+            void reply(const Reply &);
 
-    private Q_SLOTS:
+        private Q_SLOTS:
 
-        void readCharacter(char);
-        void readUnsafeString(const QString &);
-        void readSafeString(const QByteArray &);
+            void readCharacter(char);
+            void readUnsafeString(const QString &);
+            void readSafeString(const QByteArray &);
 
-    private:
+        private:
 
-        void descend();
+            void descend();
 
-        class Task
-        {
-            public:
+            class Task
+            {
+                public:
 
-                enum Action {
-                    ReadStatus,
-                    ReadError,
-                    ReadInteger,
-                    ReadBulk,
-                    ReadMultiBulk
-                };
+                    enum { Unknown = -2 };
 
-                enum { Unknown = -2 };
+                    Task(Reply::Type type) : reply(type), count(Unknown) {}
 
-                Task(Action action) : action(action), count(Unknown) {}
+                    Reply reply;
+                    int count;
+            };
 
-                Action action;
-                int count;
-                QVariant value;
-        };
+            QList<Task> stack;
 
-        QList<Task> stack;
+            Task & tos() { return stack.last(); }
+    };
+}
 
-        inline Task & tos() { return stack.last(); }
-};
-
-#endif // PARSER_H
+#endif // QREDIS_PARSER_H

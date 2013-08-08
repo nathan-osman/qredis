@@ -20,6 +20,13 @@ namespace QRedis
             enum Type {
 
                 /**
+                 * @brief An invalid reply
+                 *
+                 * This value is only set when the default constructor is used.
+                 */
+                Invalid,
+
+                /**
                  * @brief A status reply
                  *
                  * The value property will contain the status message returned
@@ -62,9 +69,13 @@ namespace QRedis
             };
 
             /**
+             * @brief Creates an empty reply
+             */
+            Reply() : _type(Invalid) {}
+
+            /**
              * @brief Initializes the reply
              * @param type the type of the reply
-             * @param value the value of the reply
              */
             Reply(Type type) : _type(type) {}
 
@@ -75,7 +86,7 @@ namespace QRedis
             Type type() const { return _type; }
 
             /**
-             * @brief Returns the value of the reply
+             * @brief Returns a reference to the value of the reply
              * @return the reply value
              */
             QVariant & value() { return _value; }
@@ -86,5 +97,7 @@ namespace QRedis
             QVariant _value;
     };
 }
+
+Q_DECLARE_METATYPE(QRedis::Reply)
 
 #endif // QREDIS_REPLY_H
